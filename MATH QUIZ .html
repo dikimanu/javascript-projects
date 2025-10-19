@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Math Quiz</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+      color: #333;
+      min-height: 100vh;
+      transition: background 0.5s, color 0.5s;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 16px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      margin-top: 20px;
+      width: 100%;
+      transition: background 0.3s ease;
+    }
+    .question {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-answer {
+      background: #f0f0f0;
+      box-shadow: 2px 2px 6px #ccc, -2px -2px 6px #fff;
+    }
+    .btn-answer:hover {
+      background: #e0e0e0;
+    }
+    .btn-correct {
+      background-color: #4caf50 !important;
+      color: white;
+    }
+    .btn-wrong {
+      background-color: #f44336 !important;
+      color: white;
+    }
+    .btn-primary {
+      background: #2196f3;
+      color: white;
+      font-weight: bold;
+    }
+    .btn-primary:hover {
+      background: #1976d2;
+    }
+    .progress {
+      height: 10px;
+      background: #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .progress-bar {
+      height: 10px;
+      background: #2196f3;
+      width: 0;
+      transition: width 0.3s;
+    }
+    .info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    #timer {
+      text-align: right;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    @media (max-width: 500px) {
+      .question {
+        font-size: 1.1rem;
+      }
+      button {
+        font-size: 0.95rem;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Math Quiz</h1>
+  <button id="start-btn" class="btn-primary">Start Quiz</button>
+
+  <div id="quiz" class="card" style="display:none;">
+    <div class="info">
+      <span>Score: <span id="score">0</span></span>
+      <span>Question <span id="current">1</span></span>
+    </div>
+    <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+    <div id="timer">Time left: <span id="time-left">30</span>s</div>
+    <div id="question" class="question"></div>
+    <div id="answers"></div>
+    <button id="next-btn" class="btn-primary" style="display:none;">Next</button>
+    <button id="restart-btn" class="btn-primary" style="display:none;">Restart</button>
+  </div>
+
+  <div id="summary" class="card" style="display:none;">
+    <h2>Quiz Completed!</h2>
+    <p>Your Score: <span id="final-score"></span></p>
+    <p>High Score: <span id="high-score"></span></p>
+    <button id="play-again-btn" class="btn-primary">Play Again</button>
+  </div>
+</div>
+
+<script>
+// JavaScript remains unchanged — already functional
+const startBtn = document.getElementById('start-btn');
+const quiz = document.getElementById('quiz');
+const questionEl = document.getElementById('question');
+const answersEl = document.getElementById('answers');
+const nextBtn = document.getElementById('next-btn');
+const restartBtn = document.getElementById('restart-btn');
+const scoreEl = document.getElementById('score');
+const currentEl = document.getElementById('current');
+const progressBar = document.getElementById('progress-bar');
+const summary = document.getElementById('summary');
+const finalScore = document.getElementById('final-score');
+const highScoreEl = document.getElementById('high-score');
+const timeLeftEl = document.getElementById('time-left');
+
+let score = 0;
+let questionCount = 0;
+let correctAnswer = 0;
+let timer;
+
+function generateQuestion() {
+  let a = Math.floor(Math.random() * 50) + 1;
+  let b = Math.floor(Math.random() * 50) + 1;
+  let ops = ['+', '-', '*', '/'];
+  let op = ops[Math.floor(Math.random() * ops.length)];
+
+  if (op === '/') {
+    correctAnswer = a;
+    a = a * b;
+  }
+
+  let questionText = `${a} ${op} ${b}`;
+  correctAnswer = Math.round(eval(questionText));
+  const options = [correctAnswer];
+  while (options.length < 4) {
+    const fake = correctAnswer + Math.floor(Math.random() * 10 - 5);
+    if (!options.includes(fake)) options.push(fake);
+  }
+  return {
+    question: `What is ${questionText}?`,
+    options: options.sort(() => Math.random() - 0.5)
+  };
+}
+
+function startTimer() {
+  let time = 30;
+  timeLeftEl.textContent = time;
+  clearInterval(timer);
+  timer = setInterval(() => {
+    time--;
+    timeLeftEl.textContent = time;
+    if (time <= 0) {
+      clearInterval(timer);
+      showQuestion();
+    }
+  }, 1000);
+}
+
+function showQuestion() {
+  const q = generateQuestion();
+  questionEl.textContent = q.question;
+  answersEl.innerHTML = '';
+  q.options.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.textContent = opt;
+    btn.className = 'btn-answer';
+    btn.onclick = () => selectAnswer(btn);
+    answersEl.appendChild(btn);
+  });
+  nextBtn.style.display = 'none';
+  restartBtn.style.display = 'none';
+  updateProgress();
+  startTimer();
+}
+
+function selectAnswer(btn) {
+  clearInterval(timer);
+  const buttons = document.querySelectorAll('.btn-answer');
+  buttons.forEach(b => {
+    b.disabled = true;
+    if (parseInt(b.textContent) === correctAnswer) b.classList.add('btn-correct');
+    else if (b === btn) b.classList.add('btn-wrong');
+  });
+  if (parseInt(btn.textContent) === correctAnswer) score++;
+  scoreEl.textContent = score;
+  nextBtn.style.display = 'block';
+  restartBtn.style.display = 'block';
+}
+
+function updateProgress() {
+  questionCount++;
+  currentEl.textContent = questionCount;
+  progressBar.style.width = `${(questionCount % 10) * 10}%`;
+}
+
+function showSummary() {
+  quiz.style.display = 'none';
+  summary.style.display = 'block';
+  finalScore.textContent = score;
+  const highScore = Math.max(score, localStorage.getItem('mathHighScore') || 0);
+  localStorage.setItem('mathHighScore', highScore);
+  highScoreEl.textContent = highScore;
+}
+
+startBtn.onclick = () => {
+  score = 0;
+  questionCount = 0;
+  scoreEl.textContent = score;
+  summary.style.display = 'none';
+  quiz.style.display = 'block';
+  showQuestion();
+};
+
+nextBtn.onclick = showQuestion;
+restartBtn.onclick = showQuestion;
+playAgainBtn.onclick = () => {
+  score = 0;
+  questionCount = 0;
+  summary.style.display = 'none';
+  quiz.style.display = 'block';
+  showQuestion();
+};
+</script>
+</body>
+</html>

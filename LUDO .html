@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🎲 Dynamic Dice Game</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 40px;
+      background-color: #f0f8ff;
+    }
+
+    input {
+      padding: 10px;
+      font-size: 16px;
+      margin: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    #gameDisplay {
+      opacity: 0;
+      transition: opacity 0.8s ease-in-out;
+    }
+
+    #gameDisplay.show {
+      opacity: 1;
+    }
+
+    #round, #rolls, #scores, #result, #countdown {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .highlight {
+      font-size: 26px;
+      color: darkblue;
+      margin-top: 20px;
+    }
+
+    .dice {
+      display: inline-block;
+      font-size: 30px;
+      animation: rollDice 0.6s ease-in-out;
+    }
+
+    @keyframes rollDice {
+      0% { transform: rotate(0deg) scale(1); opacity: 0.3; }
+      50% { transform: rotate(360deg) scale(1.4); opacity: 0.9; }
+      100% { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+
+    #countdown {
+      font-size: 28px;
+      color: crimson;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎲 Dice Game (Enter 2–4 Players to Start)</h1>
+
+  <!-- Player Inputs -->
+  <div id="nameInputs">
+    <input type="text" id="p1" placeholder="Player 1 Name" />
+    <input type="text" id="p2" placeholder="Player 2 Name" /><br>
+    <input type="text" id="p3" placeholder="Player 3 Name" />
+    <input type="text" id="p4" placeholder="Player 4 Name" />
+  </div>
+
+  <!-- Buttons -->
+  <button onclick="initGame()">✅ Confirm Players</button>
+  <button onclick="resetGame()">🔄 Reset</button>
+
+  <!-- Countdown Display -->
+  <div id="countdown"></div>
+
+  <!-- Game Display -->
+  <div id="gameDisplay" class="fade">
+    <div id="round"></div>
+    <div id="rolls"></div>
+    <div id="scores"></div>
+    <div id="result" class="highlight"></div>
+    <button onclick="startGame()">🎮 Next Round</button>
+  </div>
+
+  <script>
+    let round = 0;
+    const maxRounds = 7;
+    let players = [];
+    let scores = [];
+
+    function initGame() {
+      // Collect player names from inputs
+      players = [
+        document.getElementById("p1").value.trim(),
+        document.getElementById("p2").value.trim(),
+        document.getElementById("p3").value.trim(),
+        document.getElementById("p4").value.trim()
+      ].filter(name => name !== "");
+
+      if (players.length < 2) {
+        alert("❗ Please enter at least 2 player names to start the game.");
+        return;
+      }
+
+      // Hide name inputs, show game UI
+      document.getElementById("nameInputs").style.display = "none";
+      document.getElementById("gameDisplay").classList.remove("show");
+      round = 0;
+      scores = new Array(players.length).fill(0);
+
+      // Start first round
+      startGame();
+    } 
+
+    function startGame() {
+      if (round >= maxRounds) return;
+
+      round++;
+      document.getElementById("round").textContent = `🎯 Round ${round} of ${maxRounds}`;
+
+      // Countdown before roll
+      let countdown = 3;
+      document.getElementById("countdown").textContent = countdown;
+
+      const interval = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          document.getElementById("countdown").textContent = countdown;
+        } else if (countdown === 0) {
+          document.getElementById("countdown").textContent = "🎲 Rolling!";
+        } else {
+          clearInterval(interval);
+          document.getElementById("countdown").textContent = "";
+          playRound();
+        }
+      }, 800);
+    }
+
+    function playRound() {
+      const gameDisplay = document.getElementById("gameDisplay");
+      gameDisplay.classList.remove("show");
+      void gameDisplay.offsetWidth;
+      gameDisplay.classList.add("show");
+
+      let rollsText = "";
+      for (let i = 0; i < players.length; i++) {
+        const roll = Math.floor(Math.random() * 6) + 1;
+        scores[i] += roll;
+        rollsText += `<div class="dice">${players[i]} rolled: ${roll} 🎲</div><br>`;
+      }
+
+      document.getElementById("rolls").innerHTML = rollsText;
+      document.getElementById("scores").innerText =
+        `Scores:\n${players.map((p, i) => `${p}: ${scores[i]}`).join('\n')}`;
+
+      if (round === maxRounds) {
+        declareWinner();
+      }
+    }
+
+    function declareWinner() {
+      const maxScore = Math.max(...scores);
+      const winners = players.filter((_, i) => scores[i] === maxScore);
+
+      let resultText = "";
+      if (winners.length === 1) {
+        resultText = `🏆 ${winners[0]} Wins with ${maxScore} Points!`;
+      } else {
+        resultText = `🤝 It's a Tie between ${winners.join(" & ")} with ${maxScore} Points!`;
+      }
+
+      document.getElementById("result").textContent = resultText;
+    }
+
+    function resetGame() {
+      round = 0;
+      players = [];
+      scores = [];
+
+      document.getElementById("nameInputs").style.display = "block";
+      document.getElementById("gameDisplay").classList.remove("show");
+
+      document.getElementById("round").textContent = "";
+      document.getElementById("rolls").textContent = "";
+      document.getElementById("scores").textContent = "";
+      document.getElementById("result").textContent = "";
+      document.getElementById("countdown").textContent = "";
+
+      // Clear inputs
+      document.getElementById("p1").value = "";
+      document.getElementById("p2").value = "";
+      document.getElementById("p3").value = "";
+      document.getElementById("p4").value = "";
+    }
+  </script>
+
+</body>
+</html>
