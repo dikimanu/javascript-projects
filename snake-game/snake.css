@@ -1,0 +1,126 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.body {
+  background-image: url("https://static.vecteezy.com/system/resources/thumbnails/052/396/100/small_2x/rippling-water-reflecting-green-trees-and-sunlight-in-a-forest-photo.jpg");
+  min-height: 100vh;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  flex-direction: column;
+}
+
+#board {
+  box-shadow: #000000 2px 5px 49px 33px;
+  background-image: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 90vmin;
+  height: 92vmin;
+  border: 2px solid black;
+  border-radius: 550px;
+  display: grid;
+  grid-template-rows: repeat(18, 1fr);
+  grid-template-columns: repeat(18, 1fr);
+}
+
+.head {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdTt7mcrT5S6ovNGInUsWGX11hdYLi9lHEw&s");
+  border-radius: 73px;
+  border: 1px solid rgb(208, 255, 0);
+  box-shadow: yellow 2px 5px 11px 7px;
+}
+
+.food {
+  background: linear-gradient(rgb(8, 0, 255), rgb(255, 6, 6));
+  border: .25vmin solid black;
+  border-radius: 98px;
+}
+
+.snake {
+  background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIdTt7mcrT5S6ovNGInUsWGX11hdYLi9lHEw&s");
+  border: .25vmin solid rgb(255, 251, 0);
+  border-radius: 12px;
+  box-shadow: yellow 1px 2px 5px 4px;
+}
+
+#scoreBox,
+#hiscoreBox {
+  position: absolute;
+  font-size: 39px;
+  font-weight: bold;
+  color: rgb(0, 0, 0);
+  text-shadow: rgb(47, 33, 33) 3px 2px 3px;
+  border: 4px solid black;
+  background: linear-gradient(rgb(251, 244, 244), rgb(64, 64, 75));
+  box-shadow: black 5px 5px 20px;
+}
+
+#scoreBox {
+  top: 100px;
+  left: 12px;
+}
+
+#hiscoreBox {
+  top: 20px;
+  left: 10px;
+}
+
+/* Mobile Controls */
+#mobileControls {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+#mobileControls div {
+  display: flex;
+  gap: 20px;
+}
+
+.ctrl {
+  width: 60px;
+  height: 60px;
+  font-size: 30px;
+  border: none;
+  border-radius: 12px;
+  background-color: #222;
+  color: white;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.ctrl:active {
+  background-color: #555;
+}
+
+.sn {
+  position: absolute;
+  font-size: 39px;
+  font-weight: bold;
+  top: 300px;
+  font-family: "MedievalSharp", cursive;
+  text-shadow: rgb(90, 255, 2) 3px 3px 3px;
+  color: #2d533f;
+}
+
+.dik {
+  position: absolute;
+  font-size: 20px;
+  font-weight: bold;
+  top: 350px;
+  left: 490px;
+  color: rgb(255, 254, 254);
+  font-family: "Vollkorn SC", serif;
+  text-shadow: rgb(255, 255, 255) 1px 1px 3px;
+}

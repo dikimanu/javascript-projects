@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Offline Math Quiz</title>
+  <link rel="stylesheet" href="math.css">
+</head>
+<body>
+<div class="container">
+  <h1>Math Quiz</h1>
+  <button id="start-btn" class="btn-primary">Start Quiz</button>
+
+  <div id="quiz" class="card" style="display:none;">
+    <div class="info">
+      <span>Score: <span id="score">0</span></span>
+      <span>Question <span id="current">1</span></span>
+    </div>
+
+    <div class="progress"><div id="progress-bar" class="progress-bar"></div></div>
+
+    <div id="timer">Time left: <span id="time-left">30</span>s</div>
+
+    <div id="question" class="question"></div>
+    <div id="answers"></div>
+
+    <button id="next-btn" class="btn-primary" style="display:none;">Next</button>
+    <button id="restart-btn" class="btn-primary" style="display:none;">Restart</button>
+  </div>
+
+  <div id="summary" class="card" style="display:none;">
+    <h2>Quiz Completed!</h2>
+    <p>Your Score: <span id="final-score"></span></p>
+    <p>High Score: <span id="high-score"></span></p>
+    <button id="play-again-btn" class="btn-primary">Play Again</button>
+  </div>
+</div>
+
+<script src="math.js"></script>
+</body>
+</html>

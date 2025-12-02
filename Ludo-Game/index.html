@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>🎲 Dynamic Dice Game</title>
+  <link rel="stylesheet" href="ludo.css">
+</head>
+<body>
+
+  <h1>🎲 Dice Game (Enter 2–4 Players to Start)</h1>
+
+  <div id="nameInputs">
+    <input type="text" id="p1" placeholder="Player 1 Name" />
+    <input type="text" id="p2" placeholder="Player 2 Name" /><br>
+    <input type="text" id="p3" placeholder="Player 3 Name" />
+    <input type="text" id="p4" placeholder="Player 4 Name" />
+  </div>
+
+  <button onclick="initGame()">✅ Confirm Players</button>
+  <button onclick="resetGame()">🔄 Reset</button>
+
+  <div id="countdown"></div>
+
+  <div id="gameDisplay" class="fade">
+    <div id="round"></div>
+    <div id="rolls"></div>
+    <div id="scores"></div>
+    <div id="result" class="highlight"></div>
+    <button onclick="startGame()">🎮 Next Round</button>
+  </div>
+
+  <script src="ludo.js"></script>
+</body>
+</html>
